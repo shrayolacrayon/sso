@@ -25,6 +25,7 @@ RUN cd cmd/sso-proxy && go build -o /bin/sso-proxy
 # add static assets and copy binaries from build stage
 # =============================================================================
 FROM alpine:3.8
+RUN apk add --no-cache ca-certificates
 WORKDIR /sso
 COPY ./static ./static
 COPY --from=build /bin/sso-* /bin/
