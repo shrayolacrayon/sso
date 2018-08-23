@@ -14,7 +14,8 @@ RUN cd /tmp && ./gpm install
 
 WORKDIR /go/src/github.com/buzzfeed/sso
 
-COPY . .
+COPY cmd ./cmd
+COPY internal ./internal
 RUN cd cmd/sso-auth && go build -o /bin/sso-auth
 RUN cd cmd/sso-proxy && go build -o /bin/sso-proxy
 
@@ -24,8 +25,8 @@ RUN cd cmd/sso-proxy && go build -o /bin/sso-proxy
 #
 # add static assets and copy binaries from build stage
 # =============================================================================
-FROM alpine:3.8
-RUN apk add --no-cache ca-certificates
+FROM debian:stable-slim
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /sso
 COPY ./static ./static
 COPY --from=build /bin/sso-* /bin/
